@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="my" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy 22nd Birthday & 8th Month Anniversary, ခလေး! 💖</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts for Burmese and Romantic Typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Charm:wght@400;700&family=Padauk:wght@400;700&family=Plus+Jakarta+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- Canvas Confetti Library -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        rosepink: {
+                            50: '#fff1f2',
+                            100: '#ffe4e6',
+                            200: '#fecdd3',
+                            300: '#fda4af',
+                            400: '#fb7185',
+                            500: '#f43f5e',
+                            600: '#e11d48',
+                            700: '#be123c',
+                        },
+                        romance: {
+                            gold: '#f59e0b',
+                            bg: '#0f051d'
+                        }
+                    },
+                    fontFamily: {
+                        burmese: ['Padauk', 'Charm', 'sans-serif'],
+                        cursive: ['Charm', 'cursive'],
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Padauk', 'Plus Jakarta Sans', sans-serif;
+            background: linear-gradient(135deg, #180828 0%, #2a0826 50%, #150016 100%);
+            color: #fce7f3;
+            overflow-x: hidden;
+        }
+
+        /* Animated Floating Hearts Background */
+        .floating-heart {
+            position: absolute;
+            pointer-events: none;
+            opacity: 0.6;
+            animation: floatUp 8s infinite linear;
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(100vh) scale(0.5) rotate(0deg);
+                opacity: 0;
+            }
+            20% {
+                opacity: 0.8;
+            }
+            80% {
+                opacity: 0.6;
+            }
+            100% {
+                transform: translateY(-10vh) scale(1.2) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Glassmorphism card */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.07);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 8px 32px 0 rgba(225, 29, 72, 0.2);
+        }
+
+        .glass-card-hover {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .glass-card-hover:hover {
+            transform: translateY(-6px) scale(1.02);
+            box-shadow: 0 15px 35px 0 rgba(244, 63, 94, 0.35);
+            border-color: rgba(251, 113, 133, 0.4);
+        }
+
+        /* Custom Envelope Styles */
+        .envelope-wrapper {
+            perspective: 1000px;
+        }
+        .envelope {
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s ease;
+        }
+        .envelope-flap {
+            transform-origin: top;
+            transition: transform 0.5s ease 0.2s, z-index 0.2s;
+        }
+        .envelope.open .envelope-flap {
+            transform: rotateX(180deg);
+            z-index: 0;
+        }
+
+        /* Flip card effect */
+        .perspective-1000 {
+            perspective: 1000px;
+        }
+        .transform-style-3d {
+            transform-style: preserve-3d;
+        }
+        .backface-hidden {
+            backface-visibility: hidden;
+        }
+        .rotate-y-180 {
+            transform: rotateY(180deg);
+        }
+
+        /* Heartbeat Animation */
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.15); }
+        }
+        .animate-heartbeat {
+            animation: heartbeat 1.5s infinite ease-in-out;
+        }
+
+        /* Shimmer effect */
+        .shimmer-text {
+            background: linear-gradient(90deg, #fecdd3 0%, #ffffff 50%, #fda4af 100%);
+            background-size: 200% auto;
+            color: transparent;
+            -webkit-background-clip: text;
+            animation: shimmer 3s linear infinite;
+        }
+        @keyframes shimmer {
+            to { background-position: 200% center; }
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #180828;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #e11d48;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body class="min-h-screen relative font-burmese text-slate-100 selection:bg-rosepink-500 selection:text-white">
+
+    <!-- Background Hearts Container -->
+    <div id="heartsContainer" class="fixed inset-0 overflow-hidden z-0 pointer-events-none"></div>
+
+    <!-- Hidden HTML5 Audio Element -->
+    <audio id="bgAudioPlayer" loop preload="auto"></audio>
+
+    <!-- Floating Top Bar: Custom Music Upload & Player Controls -->
+    <div class="fixed top-4 left-4 right-4 z-50 flex flex-wrap items-center justify-between gap-3 pointer-events-none">
+        <!-- Audio Source Selector Badge -->
+        <div class="glass-card px-3 py-2 rounded-2xl flex items-center gap-2 pointer-events-auto text-xs text-rosepink-200 border-rosepink-500/30 shadow-lg">
+            <i class="fas fa-compact-disc text-rosepink-400 animate-spin" style="animation-duration: 4s;"></i>
+            <span id="currentTrackLabel" class="max-w-[120px] sm:max-w-[200px] truncate font-sans">သီချင်းထည့်ရန်...</span>
+            <label class="cursor-pointer bg-rosepink-600/80 hover:bg-rosepink-500 text-white font-semibold px-2.5 py-1 rounded-xl text-xs transition flex items-center gap-1 shadow">
+                <i class="fas fa-upload text-[10px]"></i>
+                <span>MP3 တင်မည်</span>
+                <input type="file" id="audioFileInput" accept="audio/*" class="hidden" onchange="handleAudioUpload(event)">
+            </label>
+        </div>
+
+        <!-- Music Play/Pause & Volume Toggle Button -->
+        <div class="glass-card px-3.5 py-2 rounded-full flex items-center space-x-3 text-rosepink-300 pointer-events-auto border-rosepink-500/30 shadow-lg">
+            <button id="musicToggleBtn" onclick="toggleAudioPlay()" class="flex items-center space-x-2 hover:text-white transition group">
+                <i id="musicIcon" class="fas fa-play text-rosepink-400 group-hover:scale-110 transition"></i>
+                <span id="musicText" class="text-xs sm:text-sm font-semibold">သီချင်းဖွင့်မည် 🎵</span>
+            </button>
+            <div id="musicWave" class="hidden items-end gap-0.5 h-3">
+                <span class="w-0.5 bg-rosepink-400 animate-bounce h-2" style="animation-delay: 0.1s;"></span>
+                <span class="w-0.5 bg-rosepink-400 animate-bounce h-3" style="animation-delay: 0.3s;"></span>
+                <span class="w-0.5 bg-rosepink-400 animate-bounce h-1.5" style="animation-delay: 0.2s;"></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="relative z-10 max-w-5xl mx-auto px-4 py-8 sm:py-12 flex flex-col items-center space-y-12 sm:space-y-16">
+
+        <!-- Header / Romantic Badge -->
+        <header class="text-center space-y-4 max-w-3xl pt-6">
+            <div class="inline-flex items-center space-x-2 glass-card px-5 py-2 rounded-full border border-rosepink-400/30 text-rosepink-300 text-sm sm:text-base font-semibold shadow-inner animate-pulse">
+                <span>💖</span>
+                <span>November 1 • Special Double Celebration</span>
+                <span>💖</span>
+            </div>
+
+            <!-- Headline -->
+            <h1 class="text-3xl sm:text-5xl md:text-6xl font-bold leading-tight shimmer-text font-cursive tracking-wide pt-2">
+                Happy 22nd Birthday & Happy 8th Month Anniversary, ခလေး! ✨
+            </h1>
+
+            <!-- Subheading -->
+            <p class="text-base sm:text-xl text-rosepink-200/90 leading-relaxed max-w-2xl mx-auto font-light px-2">
+                ၂၂ နှစ်ပြည့် မွေးနေ့နဲ့ ၈ လပြည့် Anniversary နေ့ထူးနေ့မြတ်လေးမှာ ခလေးအတွက် ကိုကို့ရဲ့ အချစ်နဲ့ ရင်ဖွင့်စာလွှာ...
+            </p>
+        </header>
+
+        <!-- Interactive Sealed Envelope / Love Letter Section -->
+        <section class="w-full flex flex-col items-center">
+            <div class="text-center mb-6">
+                <span class="text-xs uppercase tracking-widest text-rosepink-400 font-sans font-bold">Tap To Open Letter</span>
+                <h2 class="text-2xl font-bold text-white flex items-center justify-center gap-2">
+                    <span>💌</span> ကိုကို့ရဲ့ ရင်ဖွင့်စာလွှာ
+                </h2>
+            </div>
+
+            <!-- Interactive Envelope Card -->
+            <div id="envelopeCard" onclick="openLoveLetterModal()" class="cursor-pointer glass-card glass-card-hover p-8 sm:p-12 rounded-3xl w-full max-w-md text-center flex flex-col items-center space-y-6 relative border-rosepink-500/30 group">
+                <div class="w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-gradient-to-tr from-rosepink-600 to-rosepink-400 flex items-center justify-center text-4xl shadow-xl shadow-rosepink-600/30 group-hover:scale-110 transition duration-500">
+                    <i class="fas fa-envelope-open-text text-white animate-heartbeat"></i>
+                </div>
+                <div>
+                    <h3 class="text-xl sm:text-2xl font-bold text-rosepink-100 group-hover:text-rosepink-300 transition">
+                        ခလေးအတွက် သီးသန့်စာလွှာ
+                    </h3>
+                    <p class="text-sm text-rosepink-300/80 mt-1 font-sans">
+                        ( ဖွင့်ဖတ်လိုက်သည်နှင့် သီချင်းလေး အလိုအလျောက် ပွင့်လာပါမည် 🎵 )
+                    </p>
+                </div>
+                <button class="px-6 py-2.5 rounded-full bg-rosepink-600/80 hover:bg-rosepink-500 text-white font-semibold text-sm shadow-md transition duration-300 flex items-center gap-2">
+                    <span>ဖွင့်ဖတ်မည်</span>
+                    <i class="fas fa-heart text-xs"></i>
+                </button>
+            </div>
+        </section>
+
+        <!-- Memory Gallery Flip Cards -->
+        <section class="w-full space-y-6">
+            <div class="text-center space-y-1">
+                <span class="text-xs uppercase tracking-widest text-rosepink-400 font-sans font-bold">Sweet Memories & Promises</span>
+                <h2 class="text-2xl sm:text-3xl font-bold text-white">
+                    💕 တို့နှစ်ယောက်ရဲ့ အမှတ်တရ ကတ်ပြားလေးများ
+                </h2>
+                <p class="text-xs sm:text-sm text-rosepink-200/70">ကတ်ပြားလေးတွေကို နှိပ်ပြီး စာလွှာလေးတွေကို ကြည့်လိုက်ပါဦး</p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 px-2">
+
+                <!-- Flip Card 1 -->
+                <div class="h-64 perspective-1000 cursor-pointer" onclick="flipCard(this)">
+                    <div class="card-inner relative w-full h-full duration-700 transform-style-3d transition-transform">
+                        <!-- Front -->
+                        <div class="absolute inset-0 w-full h-full glass-card rounded-2xl p-6 flex flex-col items-center justify-center text-center space-y-4 border border-rosepink-500/20 backface-hidden shadow-lg">
+                            <div class="w-14 h-14 rounded-full bg-rosepink-500/20 flex items-center justify-center text-rosepink-400 text-2xl">
+                                🗓️
+                            </div>
+                            <h3 class="text-lg font-bold text-rosepink-100">၈ လတာ ခရီးစဉ်</h3>
+                            <span class="text-xs text-rosepink-300 bg-rosepink-950/60 px-3 py-1 rounded-full font-sans">Tap to Flip 🔄</span>
+                        </div>
+                        <!-- Back -->
+                        <div class="absolute inset-0 w-full h-full glass-card rounded-2xl p-6 flex flex-col items-center justify-center text-center space-y-3 bg-gradient-to-br from-rosepink-900/90 to-purple-950/90 border border-rosepink-400/40 rotate-y-180 backface-hidden shadow-xl">
+                            <i class="fas fa-heart text-rosepink-400 text-xl"></i>
+                            <p class="text-sm text-rosepink-100 leading-relaxed">
+                                ၈ လဆိုတဲ့ အချိန်အတိုင်းအတာလေးအတွင်းမှာ ကိုကို့ကို အပြည့်အဝ နားလည်ပေးပြီး သံယောဇဉ်တွေ တိုးပွားစေခဲ့လို့ ကျေးဇူးပါ ခလေး...
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Flip Card 2 -->
+                <div class="h-64 perspective-1000 cursor-pointer" onclick="flipCard(this)">
+                    <div class="card-inner relative w-full h-full duration-700 transform-style-3d transition-transform">
+                        <!-- Front -->
+                        <div class="absolute inset-0 w-full h-full glass-card rounded-2xl p-6 flex flex-col items-center justify-center text-center space-y-4 border border-rosepink-500/20 backface-hidden shadow-lg">
+                            <div class="w-14 h-14 rounded-full bg-rosepink-500/20 flex items-center justify-center text-rosepink-400 text-2xl">
+                                😊
+                            </div>
+                            <h3 class="text-lg font-bold text-rosepink-100">ခလေးရဲ့ အပြုံးလေးများ</h3>
+                            <span class="text-xs text-rosepink-300 bg-rosepink-950/60 px-3 py-1 rounded-full font-sans">Tap to Flip 🔄</span>
+                        </div>
+                        <!-- Back -->
+                        <div class="absolute inset-0 w-full h-full glass-card rounded-2xl p-6 flex flex-col items-center justify-center text-center space-y-3 bg-gradient-to-br from-rosepink-900/90 to-purple-950/90 border border-rosepink-400/40 rotate-y-180 backface-hidden shadow-xl">
+                            <i class="fas fa-smile-beam text-amber-300 text-2xl"></i>
+                            <p class="text-sm text-rosepink-100 leading-relaxed">
+                                ခလေးရဲ့ ကလေးဆန်ဆန် အပြုံးလေးတွေနဲ့ ရယ်သံလေးတွေဟာ ကိုကို့ကမ္ဘာကို အတောက်ပဆုံးနဲ့ အလှပဆုံး အလင်းရောင်တွေ ပေးစွမ်းနိုင်ပါတယ်။
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Flip Card 3 -->
+                <div class="h-64 perspective-1000 cursor-pointer" onclick="flipCard(this)">
+                    <div class="card-inner relative w-full h-full duration-700 transform-style-3d transition-transform">
+                        <!-- Front -->
+                        <div class="absolute inset-0 w-full h-full glass-card rounded-2xl p-6 flex flex-col items-center justify-center text-center space-y-4 border border-rosepink-500/20 backface-hidden shadow-lg">
+                            <div class="w-14 h-14 rounded-full bg-rosepink-500/20 flex items-center justify-center text-rosepink-400 text-2xl">
+                                👑
+                            </div>
+                            <h3 class="text-lg font-bold text-rosepink-100">ကိုကို့ရဲ့ တစ်ခုတည်းသော ခလေး</h3>
+                            <span class="text-xs text-rosepink-300 bg-rosepink-950/60 px-3 py-1 rounded-full font-sans">Tap to Flip 🔄</span>
+                        </div>
+                        <!-- Back -->
+                        <div class="absolute inset-0 w-full h-full glass-card rounded-2xl p-6 flex flex-col items-center justify-center text-center space-y-3 bg-gradient-to-br from-rosepink-900/90 to-purple-950/90 border border-rosepink-400/40 rotate-y-180 backface-hidden shadow-xl">
+                            <i class="fas fa-crown text-amber-400 text-xl"></i>
+                            <p class="text-sm text-rosepink-100 leading-relaxed">
+                                ကိုကို့ရဲ့ နှလုံးသားထဲမှာ ခလေးဟာ အမြဲတမ်း ပထမဆုံးနဲ့ တစ်ခုတည်းသော အရေးအကြီးဆုံး မင်းသမီးလေးပါပဲ။
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Flip Card 4 -->
+                <div class="h-64 perspective-1000 cursor-pointer" onclick="flipCard(this)">
+                    <div class="card-inner relative w-full h-full duration-700 transform-style-3d transition-transform">
+                        <!-- Front -->
+                        <div class="absolute inset-0 w-full h-full glass-card rounded-2xl p-6 flex flex-col items-center justify-center text-center space-y-4 border border-rosepink-500/20 backface-hidden shadow-lg">
+                            <div class="w-14 h-14 rounded-full bg-rosepink-500/20 flex items-center justify-center text-rosepink-400 text-2xl">
+                                ♾️
+                            </div>
+                            <h3 class="text-lg font-bold text-rosepink-100">နောင်နှစ်ပေါင်းများစွာအထိ</h3>
+                            <span class="text-xs text-rosepink-300 bg-rosepink-950/60 px-3 py-1 rounded-full font-sans">Tap to Flip 🔄</span>
+                        </div>
+                        <!-- Back -->
+                        <div class="absolute inset-0 w-full h-full glass-card rounded-2xl p-6 flex flex-col items-center justify-center text-center space-y-3 bg-gradient-to-br from-rosepink-900/90 to-purple-950/90 border border-rosepink-400/40 rotate-y-180 backface-hidden shadow-xl">
+                            <i class="fas fa-infinity text-pink-400 text-xl"></i>
+                            <p class="text-sm text-rosepink-100 leading-relaxed">
+                                ဒီနေ့ ၂၂ နှစ်မြောက် မွေးနေ့ကနေစပြီး နောက်ထပ် ရောက်လာမယ့် မွေးနေ့တွေနဲ့ Anniversary တွေတိုင်းမှာလည်း လက်တွဲမဖြုတ်ဘဲ အတူတူရှိနေချင်ပါတယ် ခလေး...
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Reasons I Love You Section -->
+        <section class="w-full max-w-3xl glass-card rounded-3xl p-6 sm:p-8 space-y-6 border-rosepink-500/30">
+            <div class="text-center space-y-1">
+                <span class="text-xs uppercase tracking-widest text-rosepink-400 font-sans font-bold">Little Special Secrets</span>
+                <h2 class="text-2xl font-bold text-white flex items-center justify-center gap-2">
+                    <span>✨</span> ကိုကို ခလေးကို ချစ်ရတဲ့ အကြောင်းအရင်းလေးများ <span>✨</span>
+                </h2>
+                <p class="text-xs text-rosepink-200/70">အောက်ပါ စာကြောင်းလေးများကို နှိပ်ပြီး ဖွင့်ကြည့်ပါဦး</p>
+            </div>
+
+            <div class="space-y-3" id="reasonsContainer">
+                <!-- Interactive Wish Item 1 -->
+                <div onclick="unlockReason(this)" class="reason-item cursor-pointer p-4 rounded-xl bg-white/5 hover:bg-rosepink-950/40 border border-white/10 hover:border-rosepink-500/40 transition duration-300 flex items-center justify-between group">
+                    <div class="flex items-center space-x-3">
+                        <span class="reason-icon w-8 h-8 rounded-full bg-rosepink-500/20 text-rosepink-300 flex items-center justify-center font-bold text-sm">1</span>
+                        <p class="reason-text text-sm sm:text-base text-rosepink-200 group-hover:text-white transition">
+                            ကိုကို့အပေါ် အမြဲတမ်း သစ္စာရှိပြီးချစ်ပေးလို့ 🌸
+                        </p>
+                    </div>
+                    <i class="fas fa-heart text-rosepink-500 opacity-40 group-hover:opacity-100 group-hover:scale-125 transition"></i>
+                </div>
+
+                <!-- Interactive Wish Item 2 -->
+                <div onclick="unlockReason(this)" class="reason-item cursor-pointer p-4 rounded-xl bg-white/5 hover:bg-rosepink-950/40 border border-white/10 hover:border-rosepink-500/40 transition duration-300 flex items-center justify-between group">
+                    <div class="flex items-center space-x-3">
+                        <span class="reason-icon w-8 h-8 rounded-full bg-rosepink-500/20 text-rosepink-300 flex items-center justify-center font-bold text-sm">2</span>
+                        <p class="reason-text text-sm sm:text-base text-rosepink-200 group-hover:text-white transition">
+                            ခလေးရဲ့ ကလေးဆန်ဆန် ချစ်စရာကောင်းတဲ့ အမူအရာလေးကြောင့် ✨
+                        </p>
+                    </div>
+                    <i class="fas fa-heart text-rosepink-500 opacity-40 group-hover:opacity-100 group-hover:scale-125 transition"></i>
+                </div>
+
+                <!-- Interactive Wish Item 3 -->
+                <div onclick="unlockReason(this)" class="reason-item cursor-pointer p-4 rounded-xl bg-white/5 hover:bg-rosepink-950/40 border border-white/10 hover:border-rosepink-500/40 transition duration-300 flex items-center justify-between group">
+                    <div class="flex items-center space-x-3">
+                        <span class="reason-icon w-8 h-8 rounded-full bg-rosepink-500/20 text-rosepink-300 flex items-center justify-center font-bold text-sm">3</span>
+                        <p class="reason-text text-sm sm:text-base text-rosepink-200 group-hover:text-white transition">
+                            ခလေး ကိုကို့ဘဝထဲ ရောက်လာပြီးတည်းက နေ့ရက်တိုင်း ပျော်ရွှင်မှုတွေနဲ့ ပြည့်နှက်နေလို့ ☀️
+                        </p>
+                    </div>
+                    <i class="fas fa-heart text-rosepink-500 opacity-40 group-hover:opacity-100 group-hover:scale-125 transition"></i>
+                </div>
+
+                <!-- Interactive Wish Item 4 -->
+                <div onclick="unlockReason(this)" class="reason-item cursor-pointer p-4 rounded-xl bg-white/5 hover:bg-rosepink-950/40 border border-white/10 hover:border-rosepink-500/40 transition duration-300 flex items-center justify-between group">
+                    <div class="flex items-center space-x-3">
+                        <span class="reason-icon w-8 h-8 rounded-full bg-rosepink-500/20 text-rosepink-300 flex items-center justify-center font-bold text-sm">4</span>
+                        <p class="reason-text text-sm sm:text-base text-rosepink-200 group-hover:text-white transition">
+                            နားလည်မှုအပြည့်နဲ့ ကိုကို့လက်ကို မြဲမြဲတွဲပေးထားလို့ 🤝💖
+                        </p>
+                    </div>
+                    <i class="fas fa-heart text-rosepink-500 opacity-40 group-hover:opacity-100 group-hover:scale-125 transition"></i>
+                </div>
+            </div>
+        </section>
+
+        <!-- Big Celebration Button -->
+        <section class="py-6 text-center">
+            <button onclick="triggerBigCelebration()" class="px-8 py-4 rounded-full bg-gradient-to-r from-rosepink-600 via-rosepink-500 to-pink-500 hover:from-rosepink-500 hover:to-pink-400 text-white font-bold text-lg sm:text-xl shadow-xl shadow-rosepink-600/40 transform hover:scale-105 active:scale-95 transition duration-300 flex items-center justify-center space-x-3 mx-auto border border-rosepink-300/30">
+                <span>Celebrate with Love 💖🎉</span>
+            </button>
+            <p class="text-xs text-rosepink-300/70 mt-3 font-sans">
+                ( Click to play "Happy Birthday!" voice cheer & heart confetti! )
+            </p>
+        </section>
+
+        <!-- Footer -->
+        <footer class="text-center pb-8 space-y-2 border-t border-rosepink-500/20 pt-8 w-full">
+            <p class="text-sm text-rosepink-200/80">
+                November 1 • 22nd Birthday & 8th Month Anniversary Special
+            </p>
+            <p class="text-xs text-rosepink-400">
+                Forever & Always with Love, <span class="font-bold text-rosepink-300">ကိုကို</span> 💕
+            </p>
+        </footer>
+    </div>
+
+    <!-- Celebration Popup Modal -->
+    <div id="celebrationModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="glass-card max-w-lg w-full rounded-3xl p-8 text-center space-y-6 border-2 border-rosepink-400/50 shadow-2xl transform scale-95 transition-transform duration-300" id="celebrationModalCard">
+            <div class="text-6xl animate-bounce">🎂✨🎉</div>
+            <h3 class="text-3xl font-bold text-rosepink-200 font-cursive">
+                Happy 22nd Birthday & 8th Month Anniversary!
+            </h3>
+            <p class="text-base text-rosepink-100 font-burmese leading-relaxed">
+                ကိုကို့ရဲ့ ချစ်လှစွာသော <span class="text-rosepink-300 font-bold">ခလေး</span> လေး <br>
+                ဒီနေ့ မွေးနေ့ကစလို့ အမြဲတမ်း ပျော်ရွှင်ချမ်းမြေ့ပါစေ ခလေးရေ! 💕
+            </p>
+            <button onclick="closeCelebrationModal()" class="px-8 py-3 rounded-full bg-gradient-to-r from-rosepink-600 to-pink-500 text-white font-bold text-sm shadow-lg hover:scale-105 transition">
+                ကျေးဇူးပါ ကိုကို 💖
+            </button>
+        </div>
+    </div>
+
+    <!-- Modal: Burmese Love Letter -->
+    <div id="letterModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300">
+        <div class="glass-card max-w-2xl w-full max-h-[85vh] rounded-3xl p-6 sm:p-8 overflow-y-auto relative border-rosepink-400/30 shadow-2xl space-y-6 transform scale-95 transition-transform duration-300" id="letterModalCard">
+            <!-- Close Button -->
+            <button onclick="closeLoveLetterModal()" class="absolute top-5 right-5 w-9 h-9 rounded-full bg-rosepink-500/20 hover:bg-rosepink-500 text-rosepink-300 hover:text-white flex items-center justify-center transition">
+                <i class="fas fa-times text-lg"></i>
+            </button>
+
+            <!-- Letter Header -->
+            <div class="text-center space-y-2 border-b border-rosepink-500/20 pb-4">
+                <div class="text-3xl">💌</div>
+                <h3 class="text-2xl sm:text-3xl font-bold text-rosepink-200 font-cursive">
+                    မွေးနေ့နဲ့ Anniversary ဆုတောင်း ရင်ဖွင့်စာလွှာ
+                </h3>
+                <p class="text-xs text-rosepink-400 font-sans">To: ကိုကို့ရဲ့ ခလေးလေး 💖</p>
+            </div>
+
+            <!-- Burmese Love Letter Content -->
+            <div class="space-y-4 text-slate-100 text-base sm:text-lg leading-relaxed font-burmese px-2">
+                <p class="indent-4">
+                    ချစ်ရတဲ့ <span class="text-rosepink-300 font-bold">ခလေး</span> ရေ...
+                </p>
+                <p>
+                    ဒီနေ့ နိုဝင်ဘာလ ၁ ရက်နေ့ဟာ ကိုကို့အတွက်တော့ သိပ်ကို ထူးခြားပြီး မင်္ဂလာရှိလှတဲ့ နေ့လေးတစ်နေ့ပါပဲ။ ခလေးရဲ့ (၂၂) နှစ်ပြည့် မွေးနေ့ရက်မြတ်လေး ဖြစ်သလို ကိုကိုတို့နှစ်ယောက် ချစ်သူသက်တမ်း (၈) လပြည့်တဲ့ နေ့လေးလည်း ဖြစ်တာကြောင့် ဒီနေ့လေးဟာ ကိုကို့အတွက်တော့ နှစ်ထပ်ကွမ်း ပျော်ရွှင်ရတဲ့ နေ့လေးပါပဲ။
+                </p>
+                <p>
+                    လွန်ခဲ့တဲ့ ၈ လတာ ကာလအတွင်းမှာ ကိုကို့ဘဝထဲကို ခလေး ရောက်လာပေးခဲ့လို့ ကိုကို သိပ်ကို ကံကောင်းခဲ့ရပါတယ်။ ကိုကို့ကို နားလည်ပေးတယ်၊ ဂရုစိုက်ပေးတယ်၊ ချစ်ပေးခဲ့တယ်... ခလေး ပေးခဲ့တဲ့ အချစ်တွေနဲ့ ပျော်ရွှင်မှုတွေကြောင့် ကိုကို့ နေ့ရက်တိုင်းဟာ အဓိပ္ပါယ်တွေ ပြည့်နှက်နေခဲ့ရပါတယ်။
+                </p>
+                <p>
+                    ဒီနေ့ ကျရောက်တဲ့ (၂၂) နှစ်ပြည့် မွေးနေ့လေးမှသည် နောင်နှစ်ပေါင်းများစွာတိုင်အောင် ခလေးလေး စိတ်၏ချမ်းသာခြင်း၊ ကိုယ်၏ကျန်းမာခြင်းတို့နဲ့ ပြည့်စုံပြီး လိုချင်တဲ့ အိမ်မက်တွေ မှန်းသမျှ တိုင်းလည်း အကောင်အထည်ဖော်နိုင်ပါစေလို့ ကိုကို အနက်ရှိုင်းဆုံး ဆုတောင်းပေးပါတယ်။
+                </p>
+                <p>
+                    ဘဝမှာ အခက်အခဲတွေ၊ စိန်ခေါ်မှုတွေ ဘယ်လိုပဲရှိပါစေ ခလေးရဲ့ ဘေးမှာ ကိုကို အမြဲတမ်း ရှိနေပေးမှာပါ။ ခလေးရဲ့ လက်ကို မြဲမြဲတွဲထားပြီး ရှေ့ဆက်မယ့် နေ့ရက်တိုင်းမှာ ပျော်ရွှင်စရာ အမှတ်တရပေါင်းများစွာကို အတူတူ ဖန်တီးသွားကြမယ်နော်။
+                </p>
+                <p class="text-right pt-4 text-rosepink-300 font-bold">
+                    ခလေးကို သိပ်ချစ်ရတဲ့ ~ <br>
+                    <span class="text-xl text-rosepink-400">ကိုကို 💖</span>
+                </p>
+            </div>
+
+            <!-- Modal Bottom Button -->
+            <div class="text-center pt-2">
+                <button onclick="closeLoveLetterModal()" class="px-6 py-2.5 rounded-full bg-rosepink-600 hover:bg-rosepink-500 text-white font-semibold text-sm shadow-md transition">
+                    စာလွှာကို ပိတ်မည် ✨
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Interactions & Web Audio Synthesizer -->
+    <script>
+        // Audio Player Engine
+        const audioElement = document.getElementById('bgAudioPlayer');
+        let customAudioLoaded = false;
+
+        // Handle MP3 File Upload from device
+        function handleAudioUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const objectUrl = URL.createObjectURL(file);
+                audioElement.src = objectUrl;
+                customAudioLoaded = true;
+                document.getElementById('currentTrackLabel').innerText = file.name;
+                
+                // Play immediately if uploaded
+                playAudioTrack();
+            }
+        }
+
+        function playAudioTrack() {
+            if (audioElement.src) {
+                audioElement.play().then(() => {
+                    updateAudioUI(true);
+                }).catch(err => {
+                    console.log('Audio playback prevented by browser:', err);
+                });
+            } else {
+                // Fallback to synthesized romantic melody if no custom audio uploaded
+                if (!isMusicPlaying) toggleMusic();
+            }
+        }
+
+        function pauseAudioTrack() {
+            if (audioElement.src) {
+                audioElement.pause();
+                updateAudioUI(false);
+            }
+            if (isMusicPlaying) {
+                toggleMusic();
+            }
+        }
+
+        function toggleAudioPlay() {
+            if (audioElement.src) {
+                if (audioElement.paused) {
+                    playAudioTrack();
+                } else {
+                    pauseAudioTrack();
+                }
+            } else {
+                toggleMusic();
+            }
+        }
+
+        function updateAudioUI(isPlaying) {
+            const icon = document.getElementById('musicIcon');
+            const text = document.getElementById('musicText');
+            const wave = document.getElementById('musicWave');
+
+            if (isPlaying) {
+                icon.className = "fas fa-pause text-rosepink-300";
+                text.innerText = "သီချင်းပိတ်မည် ⏸️";
+                wave.classList.remove('hidden');
+                wave.classList.add('flex');
+            } else {
+                icon.className = "fas fa-play text-rosepink-400";
+                text.innerText = "သီချင်းဖွင့်မည် 🎵";
+                wave.classList.remove('flex');
+                wave.classList.add('hidden');
+            }
+        }
+
+        // Floating Background Hearts Generator
+        function createFloatingHearts() {
+            const container = document.getElementById('heartsContainer');
+            const heartIcons = ['💖', '💗', '💕', '🌸', '✨', '❤️'];
+            const heartCount = 20;
+
+            for (let i = 0; i < heartCount; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'floating-heart text-lg sm:text-2xl';
+                heart.innerText = heartIcons[Math.floor(Math.random() * heartIcons.length)];
+                heart.style.left = Math.random() * 100 + 'vw';
+                heart.style.animationDuration = (Math.random() * 5 + 5) + 's';
+                heart.style.animationDelay = (Math.random() * 5) + 's';
+                container.appendChild(heart);
+            }
+        }
+        createFloatingHearts();
+
+        // Interactive Card Flip
+        function flipCard(cardWrapper) {
+            const inner = cardWrapper.querySelector('.card-inner');
+            inner.classList.toggle('rotate-y-180');
+            playSoftPopSound();
+        }
+
+        // Reasons interactive unlock effect
+        function unlockReason(element) {
+            element.classList.toggle('bg-rosepink-900/60');
+            element.classList.toggle('border-rosepink-400');
+            const icon = element.querySelector('.reason-icon');
+            icon.classList.toggle('bg-rosepink-500');
+            icon.classList.toggle('text-white');
+            playSoftPopSound();
+        }
+
+        // Modal Controls with Auto Audio Play
+        function openLoveLetterModal() {
+            const modal = document.getElementById('letterModal');
+            const card = document.getElementById('letterModalCard');
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+            card.classList.remove('scale-95');
+            card.classList.add('scale-100');
+            triggerConfettiBurst();
+            playChimeSound();
+
+            // Auto Play Audio/Music on letter open!
+            playAudioTrack();
+        }
+
+        function closeLoveLetterModal() {
+            const modal = document.getElementById('letterModal');
+            const card = document.getElementById('letterModalCard');
+            modal.classList.add('opacity-0', 'pointer-events-none');
+            card.classList.remove('scale-100');
+            card.classList.add('scale-95');
+        }
+
+        // Confetti Fireworks Engine
+        function triggerConfettiBurst() {
+            if (typeof confetti === 'function') {
+                confetti({
+                    particleCount: 70,
+                    spread: 60,
+                    origin: { y: 0.7 },
+                    colors: ['#f43f5e', '#fb7185', '#fecdd3', '#ffffff', '#f59e0b']
+                });
+            }
+        }
+
+        function triggerBigCelebration() {
+            if (typeof confetti === 'function') {
+                // Multi-burst confetti
+                const duration = 3 * 1000;
+                const animationEnd = Date.now() + duration;
+                const defaults = { startVelocity: 35, spread: 360, ticks: 80, zIndex: 60 };
+
+                function randomInRange(min, max) {
+                    return Math.random() * (max - min) + min;
+                }
+
+                const interval = setInterval(function() {
+                    const timeLeft = animationEnd - Date.now();
+                    if (timeLeft <= 0) {
+                        return clearInterval(interval);
+                    }
+                    const particleCount = 60 * (timeLeft / duration);
+                    confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.1, 0.4), y: Math.random() - 0.2 } }));
+                    confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.6, 0.9), y: Math.random() - 0.2 } }));
+                }, 250);
+            }
+            
+            // Speak "Happy Birthday!" voice sound
+            speakHappyBirthday();
+            
+            // Play musical celebration sound chime
+            playCelebrationSound();
+
+            // Open celebratory modal
+            openCelebrationModal();
+        }
+
+        // Web Speech Synthesis Voice Sound
+        function speakHappyBirthday() {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel(); // Reset active speech
+                const utterance = new SpeechSynthesisUtterance("Happy Birthday");
+                utterance.pitch = 1.2;
+                utterance.rate = 0.95;
+                utterance.volume = 1.0;
+                utterance.lang = 'en-US';
+                window.speechSynthesis.speak(utterance);
+            }
+        }
+
+        function openCelebrationModal() {
+            const modal = document.getElementById('celebrationModal');
+            const card = document.getElementById('celebrationModalCard');
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+            card.classList.remove('scale-95');
+            card.classList.add('scale-100');
+        }
+
+        function closeCelebrationModal() {
+            const modal = document.getElementById('celebrationModal');
+            const card = document.getElementById('celebrationModalCard');
+            modal.classList.add('opacity-0', 'pointer-events-none');
+            card.classList.remove('scale-100');
+            card.classList.add('scale-95');
+        }
+
+        // Web Audio Synthesizer (No external audio links required)
+        let audioCtx = null;
+        let isMusicPlaying = false;
+        let musicInterval = null;
+
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+        }
+
+        function playSoftPopSound() {
+            try {
+                initAudio();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(400, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(800, audioCtx.currentTime + 0.08);
+                gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.08);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.08);
+            } catch (e) {}
+        }
+
+        function playChimeSound() {
+            try {
+                initAudio();
+                const notes = [523.25, 659.25, 783.99, 1046.50];
+                notes.forEach((freq, idx) => {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.value = freq;
+                    gain.gain.setValueAtTime(0.1, audioCtx.currentTime + idx * 0.08);
+                    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + idx * 0.08 + 0.4);
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.start(audioCtx.currentTime + idx * 0.08);
+                    osc.stop(audioCtx.currentTime + idx * 0.08 + 0.4);
+                });
+            } catch (e) {}
+        }
+
+        function playCelebrationSound() {
+            try {
+                initAudio();
+                const notes = [440, 554.37, 659.25, 880];
+                notes.forEach((freq, idx) => {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.type = 'triangle';
+                    osc.frequency.value = freq;
+                    gain.gain.setValueAtTime(0.2, audioCtx.currentTime + idx * 0.1);
+                    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + idx * 0.1 + 0.3);
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.start(audioCtx.currentTime + idx * 0.1);
+                    osc.stop(audioCtx.currentTime + idx * 0.1 + 0.3);
+                });
+            } catch (e) {}
+        }
+
+        // Romantic Background Melody Loop
+        function toggleMusic() {
+            initAudio();
+            if (!isMusicPlaying) {
+                isMusicPlaying = true;
+                updateAudioUI(true);
+                startAmbientMelody();
+            } else {
+                isMusicPlaying = false;
+                updateAudioUI(false);
+                stopAmbientMelody();
+            }
+        }
+
+        function startAmbientMelody() {
+            const melody = [
+                261.63, 329.63, 392.00, 523.25,
+                220.00, 261.63, 329.63, 440.00,
+                174.61, 220.00, 261.63, 349.23,
+                196.00, 246.94, 293.66, 392.00
+            ];
+            let noteIdx = 0;
+
+            musicInterval = setInterval(() => {
+                if (!isMusicPlaying || !audioCtx) return;
+                try {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(melody[noteIdx], audioCtx.currentTime);
+                    gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.8);
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.8);
+
+                    noteIdx = (noteIdx + 1) % melody.length;
+                } catch(e) {}
+            }, 600);
+        }
+
+        function stopAmbientMelody() {
+            if (musicInterval) {
+                clearInterval(musicInterval);
+            }
+        }
+    </script>
+</body>
+</html>
