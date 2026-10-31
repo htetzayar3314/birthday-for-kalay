@@ -167,23 +167,18 @@
     <!-- Background Hearts Container -->
     <div id="heartsContainer" class="fixed inset-0 overflow-hidden z-0 pointer-events-none"></div>
 
-    <!-- Hidden HTML5 Audio Element -->
-    <audio id="bgAudioPlayer" loop preload="auto"></audio>
+    <!-- Hidden HTML5 Audio Element set to local bgm.mp3 -->
+    <audio id="bgAudioPlayer" src="bgm.mp3" loop preload="auto"></audio>
 
-    <!-- Floating Top Bar: Custom Music Upload & Player Controls -->
+    <!-- Floating Top Bar: Player Controls -->
     <div class="fixed top-4 left-4 right-4 z-50 flex flex-wrap items-center justify-between gap-3 pointer-events-none">
-        <!-- Audio Source Selector Badge -->
-        <div class="glass-card px-3 py-2 rounded-2xl flex items-center gap-2 pointer-events-auto text-xs text-rosepink-200 border-rosepink-500/30 shadow-lg">
+        <!-- Audio Track Label Badge -->
+        <div class="glass-card px-3.5 py-2 rounded-2xl flex items-center gap-2 pointer-events-auto text-xs text-rosepink-200 border-rosepink-500/30 shadow-lg">
             <i class="fas fa-compact-disc text-rosepink-400 animate-spin" style="animation-duration: 4s;"></i>
-            <span id="currentTrackLabel" class="max-w-[120px] sm:max-w-[200px] truncate font-sans">သီချင်းထည့်ရန်...</span>
-            <label class="cursor-pointer bg-rosepink-600/80 hover:bg-rosepink-500 text-white font-semibold px-2.5 py-1 rounded-xl text-xs transition flex items-center gap-1 shadow">
-                <i class="fas fa-upload text-[10px]"></i>
-                <span>MP3 တင်မည်</span>
-                <input type="file" id="audioFileInput" accept="audio/*" class="hidden" onchange="handleAudioUpload(event)">
-            </label>
+            <span id="currentTrackLabel" class="max-w-[150px] sm:max-w-[200px] truncate font-sans">bgm.mp3</span>
         </div>
 
-        <!-- Music Play/Pause & Volume Toggle Button -->
+        <!-- Music Play/Pause Toggle Button -->
         <div class="glass-card px-3.5 py-2 rounded-full flex items-center space-x-3 text-rosepink-300 pointer-events-auto border-rosepink-500/30 shadow-lg">
             <button id="musicToggleBtn" onclick="toggleAudioPlay()" class="flex items-center space-x-2 hover:text-white transition group">
                 <i id="musicIcon" class="fas fa-play text-rosepink-400 group-hover:scale-110 transition"></i>
@@ -253,7 +248,7 @@
             <div class="text-center space-y-1">
                 <span class="text-xs uppercase tracking-widest text-rosepink-400 font-sans font-bold">Sweet Memories & Promises</span>
                 <h2 class="text-2xl sm:text-3xl font-bold text-white">
-                    💕 တို့နှစ်ယောက်ရဲ့ အမှတ်တရ ကတ်ပြားလေးများ
+                    💕 ကိုကိုတို့နှစ်ယောက်ရဲ့ အမှတ်တရ ကတ်ပြားလေးများ
                 </h2>
                 <p class="text-xs sm:text-sm text-rosepink-200/70">ကတ်ပြားလေးတွေကို နှိပ်ပြီး စာလွှာလေးတွေကို ကြည့်လိုက်ပါဦး</p>
             </div>
@@ -363,7 +358,7 @@
                     <div class="flex items-center space-x-3">
                         <span class="reason-icon w-8 h-8 rounded-full bg-rosepink-500/20 text-rosepink-300 flex items-center justify-center font-bold text-sm">1</span>
                         <p class="reason-text text-sm sm:text-base text-rosepink-200 group-hover:text-white transition">
-                            ကိုကို့အပေါ် အမြဲတမ်း သစ္စာရှိပြီးချစ်ပေးလို့ 🌸
+                            ကိုကို့အနားမှာ အမြဲတမ်း သစ္စာရှိပြီးချစ်ပေးလို့ 🌸
                         </p>
                     </div>
                     <i class="fas fa-heart text-rosepink-500 opacity-40 group-hover:opacity-100 group-hover:scale-125 transition"></i>
@@ -491,58 +486,38 @@
         </div>
     </div>
 
-    <!-- JavaScript Interactions & Web Audio Synthesizer -->
+    <!-- JavaScript Interactions -->
     <script>
-        // Audio Player Engine
+        // Audio Player Engine targeting bgm.mp3
         const audioElement = document.getElementById('bgAudioPlayer');
-        let customAudioLoaded = false;
-
-        // Handle MP3 File Upload from device
-        function handleAudioUpload(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const objectUrl = URL.createObjectURL(file);
-                audioElement.src = objectUrl;
-                customAudioLoaded = true;
-                document.getElementById('currentTrackLabel').innerText = file.name;
-                
-                // Play immediately if uploaded
-                playAudioTrack();
-            }
-        }
 
         function playAudioTrack() {
-            if (audioElement.src) {
-                audioElement.play().then(() => {
-                    updateAudioUI(true);
-                }).catch(err => {
-                    console.log('Audio playback prevented by browser:', err);
-                });
-            } else {
-                // Fallback to synthesized romantic melody if no custom audio uploaded
+            audioElement.play().then(() => {
+                updateAudioUI(true);
+            }).catch(err => {
+                console.log('Audio playback prevented by browser policy:', err);
                 if (!isMusicPlaying) toggleMusic();
-            }
+            });
         }
 
         function pauseAudioTrack() {
-            if (audioElement.src) {
-                audioElement.pause();
-                updateAudioUI(false);
-            }
+            // Stop HTML5 Audio Element
+            audioElement.pause();
+            
+            // Stop Web Audio Synth if running
             if (isMusicPlaying) {
-                toggleMusic();
+                isMusicPlaying = false;
+                stopAmbientMelody();
             }
+            
+            updateAudioUI(false);
         }
 
         function toggleAudioPlay() {
-            if (audioElement.src) {
-                if (audioElement.paused) {
-                    playAudioTrack();
-                } else {
-                    pauseAudioTrack();
-                }
+            if (!audioElement.paused || isMusicPlaying) {
+                pauseAudioTrack();
             } else {
-                toggleMusic();
+                playAudioTrack();
             }
         }
 
@@ -553,7 +528,7 @@
 
             if (isPlaying) {
                 icon.className = "fas fa-pause text-rosepink-300";
-                text.innerText = "သီချင်းပိတ်မည် ⏸️";
+                text.innerText = "သီချင်းခေတ္တရပ်မည် ⏸️";
                 wave.classList.remove('hidden');
                 wave.classList.add('flex');
             } else {
@@ -669,7 +644,7 @@
         function speakHappyBirthday() {
             if ('speechSynthesis' in window) {
                 window.speechSynthesis.cancel(); // Reset active speech
-                const utterance = new SpeechSynthesisUtterance("Happy Birthday");
+                const utterance = new SpeechSynthesisUtterance("Happy Birthday!");
                 utterance.pitch = 1.2;
                 utterance.rate = 0.95;
                 utterance.volume = 1.0;
